@@ -15,23 +15,24 @@ import java.util.Properties;
 import com.kh.mvc.member.model.dto.Gender;
 import com.kh.mvc.member.model.dto.Member;
 import com.kh.mvc.member.model.dto.MemberRole;
+import com.kh.mvc.member.model.exception.MemberException;
 
 public class MemberDao {
 
-	private Properties prop = new Properties();
+	private Properties prop = new Properties();	//쿼리 읽어오기 위해서 properties객체 생성
 	
 	public MemberDao() {
 		String filename = MemberDao.class.getResource("/sql/member/member-query.properties").getPath();
 		System.out.println("filename@MemberDao = " + filename);
 		try {
-			prop.load(new FileReader(filename));
+			prop.load(new FileReader(filename));	//멀티캐치
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
 	}
 
-	/*
+	/**
 	 * DQL요청일때 Dao의 처리 프로세스
 	 * 1. PreparedStatement 객체 생성 (SQL전달) & 값대입(?채우기)
 	 * 2. 쿼리실행 executeQuery - ResultSet 반환
@@ -44,6 +45,7 @@ public class MemberDao {
 		ResultSet rset = null;
 		Member member = null;
 		String sql = prop.getProperty("findById");
+		// select * from member where member_id = ?
 		
 		try {
 			pstmt = conn.prepareStatement(sql);
@@ -51,11 +53,12 @@ public class MemberDao {
 			
 			rset = pstmt.executeQuery();
 			
+			//getString에 컬럼명 오타주의 (대소문자는 구분하지 않음)
 			while(rset.next()) {
 				memberId = rset.getString("member_id");
 				String password = rset.getString("password");
 				String memberName = rset.getString("member_name");
-				MemberRole memberRole = MemberRole.valueOf(rset.getString("member_role"));
+				MemberRole memberRole = MemberRole.valueOf(rset.getString("member_role"));	//enum타입으로 변환하는 메소드
 				Gender gender = Gender.valueOf(rset.getString("gender"));
 				Date birthday = rset.getDate("birthday");
 				String email = rset.getString("email");
@@ -68,7 +71,7 @@ public class MemberDao {
 			}
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw new MemberException("회원 아이디 조회 오류", e);
 		} finally {
 			close(rset);
 			close(pstmt);
@@ -76,6 +79,45 @@ public class MemberDao {
 	
 		
 		return member;
+	}
+
+	
+	
+	/**
+	 * DML요청일때 Dao의 처리 프로세스 (크게 안달라짐)
+	 * 1. PreparedStatement 객체 생성 (SQL전달) & 값대입(?채우기)
+	 * 2. 쿼리실행 executeUpdate - int 반환 (insert는 무조건 1 정상처리됐다면)
+	 * 3. PreparedStatement 객체 반환 (Connection은 반환하지 않음)
+	 * 
+	 */
+	public int insertMember(Connection conn, Member member) {
+		PreparedStatement pstmt = null;
+		int result = 0;
+		String sql = prop.getProperty("insertMember");
+		//insertMember = insert into member values (?,?,?,default,?, ?, ?, ?, ?, default, default)
+		
+		try {
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, member.getMemberId());
+			pstmt.setString(2, member.getPassword());
+			pstmt.setString(3, member.getMemberName());
+			pstmt.setString(4, member.getGender() != null ? member.getGender().name() : null);	//enum을 반환, 값을 꺼내줌. toString도 된다.
+			pstmt.setDate(5, member.getBirthday());
+			pstmt.setString(6, member.getEmail());
+			pstmt.setString(7, member.getPhone());
+			pstmt.setString(8, member.getHobby());
+			
+			result = pstmt.executeUpdate();
+			
+		} catch (SQLException e) {
+			//로깅, 분기 다 컨드롤러로 던짐.
+			//서비스로 예외던짐(unchecked, 비니지스를 설명가능한 구체적 커스텀예외로 전환해서 던지기)
+			throw new MemberException("회원가입오류", e);
+		} finally {
+			close(pstmt);
+		}
+		
+		return result;
 	}
 }
 

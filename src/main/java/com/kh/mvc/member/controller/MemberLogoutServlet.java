@@ -21,9 +21,9 @@ public class MemberLogoutServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		//1. 업무로직 : 세션객체를 가져와서 무효화처리하기.
-		HttpSession session = request.getSession(false);	//세션객체가 있으면 가져오고 존재하지 않으면 null을 반환.
+		HttpSession session = request.getSession(false);	//세션객체가 있으면 가져오고 존재하지 않으면 null을 반환해줘라. 어짜피 폐기할거니까 만들지말고.
 		if(session != null)
-			session.invalidate();
+			session.invalidate();	//서버에 존재하는 세션객체 폐기
 		
 		//2. 리다이렉트처리(url바꿔주기)
 		response.sendRedirect(request.getContextPath() + "/");

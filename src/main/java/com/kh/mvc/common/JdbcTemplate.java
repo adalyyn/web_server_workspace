@@ -28,7 +28,7 @@ public class JdbcTemplate {
 			//buildpath(/WEB-INF/classes)하위에 있는 datasource.properties의 절대경로 찾기. 절대경로가 필요하다.
 			//getResource메소드에 전달된 path의 /는 /WEB-INF/classes를 의미한다.
 			String filename = JdbcTemplate.class.getResource("/datasource.properties").getPath();
-			System.out.println("filename@JdbcTemplate = " + filename);
+//			System.out.println("filename@JdbcTemplate = " + filename);
 			prop.load(new FileReader(filename));
 			driverClass = prop.getProperty("driverClass");
 			url = prop.getProperty("url");
