@@ -17,8 +17,7 @@ public class MemberService {
 	 * 2. Dao 요청 & Connection 전달
 	 * 3. Connection 반환 (close)
 	 */
-	public Member findById(String memberId) {
-		
+	public Member findById(String memberId) {		
 		//Dao에 요청 보내기 위한 필드
 		Connection conn = getConnection();
 		Member member = memberDao.findById(conn, memberId);

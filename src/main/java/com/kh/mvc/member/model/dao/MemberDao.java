@@ -23,7 +23,7 @@ public class MemberDao {
 	
 	public MemberDao() {
 		String filename = MemberDao.class.getResource("/sql/member/member-query.properties").getPath();
-		System.out.println("filename@MemberDao = " + filename);
+//		System.out.println("filename@MemberDao = " + filename);
 		try {
 			prop.load(new FileReader(filename));	//멀티캐치
 		} catch (IOException e) {
@@ -48,11 +48,14 @@ public class MemberDao {
 		// select * from member where member_id = ?
 		
 		try {
+			//1. PreparedStatement 객체 생성 (SQL전달) & 값대입(?채우기)
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, memberId);
 			
+			//2. 쿼리실행 executeQuery - ResultSet 반환
 			rset = pstmt.executeQuery();
 			
+			//3. ResultSet처리 - dto객체로 변환한다는 의미.
 			//getString에 컬럼명 오타주의 (대소문자는 구분하지 않음)
 			while(rset.next()) {
 				memberId = rset.getString("member_id");
@@ -73,11 +76,11 @@ public class MemberDao {
 		} catch (SQLException e) {
 			throw new MemberException("회원 아이디 조회 오류", e);
 		} finally {
+			//4. ResultSet, PreparedStatement 객체 반환
 			close(rset);
 			close(pstmt);
 		}
 	
-		
 		return member;
 	}
 
@@ -94,14 +97,15 @@ public class MemberDao {
 		PreparedStatement pstmt = null;
 		int result = 0;
 		String sql = prop.getProperty("insertMember");
-		//insertMember = insert into member values (?,?,?,default,?, ?, ?, ?, ?, default, default)
+		//insertMember = insert into member values (?, ?, ?, default, ?, ?, ?, ?, ?, default, default)
 		
 		try {
-			pstmt = conn.prepareStatement(sql);
+			//DB는 index가 1부터. jdbc도 1부터 (값대입이 안된 상태로 값과 쿼리를 DB에 그대로 보내서 DB에서 처리됨, 재사용성을 높이기 위해서)
+ 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, member.getMemberId());
 			pstmt.setString(2, member.getPassword());
 			pstmt.setString(3, member.getMemberName());
-			pstmt.setString(4, member.getGender() != null ? member.getGender().name() : null);	//enum을 반환, 값을 꺼내줌. toString도 된다.
+			pstmt.setString(4, member.getGender() != null ? member.getGender().name() : null);	//enum을 반환, 값을 꺼내줌. name(), toString도 된다.
 			pstmt.setDate(5, member.getBirthday());
 			pstmt.setString(6, member.getEmail());
 			pstmt.setString(7, member.getPhone());

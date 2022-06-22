@@ -25,7 +25,7 @@ public class JdbcTestServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/plain; charset=utf-8");	//한글꺠지지말라고
+		response.setContentType("text/plain; charset=utf-8");	//한글깨지지말라고
 		response.getWriter().append("Database 연결 테스트... - 서버콘솔을 확인하세요.");		//사용자 요청이 들어왔을때
 		
 		try {
@@ -37,7 +37,7 @@ public class JdbcTestServlet extends HttpServlet {
 
 	private void testDatabaseConnection() throws ClassNotFoundException, SQLException {
 		String driverClass = "oracle.jdbc.OracleDriver";
-		String url = "jdbc:oracle:thin:@localhost:1521:xe";	//db접속프로토콜+url+포트+db이름 (클라우드 쓰면 달라져야 한다.)
+		String url = "jdbc:oracle:thin:@localhost:1521:xe";	//db접속프로토콜+@+url+포트+db이름 (클라우드 쓰면 달라져야 한다.)
 		String user = "web";
 		String password = "web";		
 		
@@ -64,7 +64,7 @@ public class JdbcTestServlet extends HttpServlet {
 		rset = pstmt.executeQuery();
 		System.out.println("> 쿼리 실행 및 ResultSet 반환 성공!");
 		
-		// 5. ResultSet 처리 (DML은 커밋/롤백처리)
+		// 5. ResultSet 처리 (DML은 커밋/롤백처리필요)
 		while(rset.next()) {
 			String memberId = rset.getString("member_id");	//컬럼명
 			String memberName = rset.getString("member_name");

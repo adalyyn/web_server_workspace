@@ -49,7 +49,7 @@ public class MemberLoginServlet extends HttpServlet {
 			
 			//로그인 성공
 			if(member != null && password.equals(member.getPassword())) {
-//			request.setAttribute("loginMember", member);
+//			request.setAttribute("loginMember", member); 이렇게 하면 페이지 이동시 로그인이 풀린다. 
 				session.setAttribute("loginMember", member);	//리다이렉트 요청에 대한 답변할때 이용
 				
 				//saveId처리(쿠키값이용)
@@ -79,8 +79,8 @@ public class MemberLoginServlet extends HttpServlet {
 					
 			
 			//4. 응답 처리
-//		RequestDispatcher reqDispatcher = request.getRequestDispatcher("/index.jsp");
-//		reqDispatcher.forward(request, response);
+//			RequestDispatcher reqDispatcher = request.getRequestDispatcher("/index.jsp");
+//			reqDispatcher.forward(request, response);
 			
 			//4. 응답처리 : 로그인 후 url변경을 위해 리다이렉트 처리
 			// 응답 302(The requested page has moved temporarily to a new URL)  redirect 전송.

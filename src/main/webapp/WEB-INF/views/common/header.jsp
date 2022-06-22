@@ -11,13 +11,14 @@
 	//아이디 저장 : 로그아웃하고 리다이렉트했을때 쿠키값이 작동해줘야 한다.
 	String saveId = null;
 	Cookie[] cookies = request.getCookies();	//다 가져오기.
-	for(Cookie c : cookies){
-		String name = c.getName();
-		String value = c.getValue();
-		System.out.println("[Cookie]" + name + "=" + value);
-		if("saveId".equals(name)){
-			saveId = value;
-		}
+	if(cookies != null)
+		for(Cookie c : cookies){
+			String name = c.getName();
+			String value = c.getValue();
+			System.out.println("[Cookie]" + name + "=" + value);
+			if("saveId".equals(name)){
+				saveId = value;
+			}
 	}
 	
 %>
@@ -29,7 +30,7 @@
 <link rel="stylesheet" href="<%=request.getContextPath() %>/css/style.css" />
 <script>
 window.onload = () => {
-	
+	//서버세션은 폐기 됐지만, msg변수에 msg담겨있음
 <% if(msg != null) { %>
 	alert("<%= msg %>");
 <% } %>

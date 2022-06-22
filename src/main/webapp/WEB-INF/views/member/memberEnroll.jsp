@@ -8,7 +8,10 @@
 			<tr>
 				<th>아이디<sup>*</sup></th>
 				<td>
-					<input type="text" placeholder="4글자이상" name="memberId" id="_memberId" value="sinsa" required>
+					<input type="text" placeholder="4글자이상" name="memberId" id="_memberId" value="" required>
+					<input type="button" value="중복검사" onclick="checkIdDuplicate();"/>
+					<input type="hidden" id="idValid" value="0" />
+					<%-- 중복검사전 0, 중복검사후(유효한 아이디) 1, 보낼거 아니라서 name값 없다.  --%>
 				</td>
 			</tr>
 			<tr>
@@ -71,7 +74,40 @@
 		<input type="reset" value="취소">
 	</form>
 </section>
+
+<%-- 아이디 중복검사 --%>
+<form action="<%= request.getContextPath() %>/member/checkIdDuplicate" name="checkIdDuplicateFrm">
+	<input type="hidden" name="memberId" />
+</form>
 <script>
+/**
+ * 사용자 입력한 id중복여부 검사
+ * - 위의 폼을 팝업에서 제출
+ */
+const checkIdDuplicate = () => {
+	const memberId = document.querySelector("#_memberId");
+	if(!/^[a-zA-Z0-9]{4,}$/.test(memberId.value)){
+		console.log(memberId.value);
+		alert("유효한 아이디를 입력해주세요");
+		memberId.select();
+		return;
+	}
+	
+	// popup제어
+	const title = "checkIdDuplicatePopup";
+	const spec = "width=300px,height=300px";
+	const popup = open("", title, spec);
+	
+	// form제어
+	const frm = document.checkIdDuplicateFrm;
+	frm.target = title;	//폼을 제출하는 대상이 현재 윈도우가 아닌 팝업으로 지정. 가장 중요한 설정임.
+	frm.memberId.value = memberId.value;
+	frm.submit();
+};
+
+
+
+<%-- 전체적인 폼 검사 --%>
 /**
  * 비밀번호 일치여부 검사
  */
@@ -83,6 +119,11 @@ document.querySelector("#passwordCheck").onblur = (e)=>{
 		password.select();
 	}
 };
+
+
+document.querySelector("#_memberId").onchange = (e) => {
+	document.querySelector("#idValid").value = 0;
+}
  
  
  /**
@@ -93,6 +134,13 @@ document.querySelector("#passwordCheck").onblur = (e)=>{
 	 if(!/^[a-zA-Z0-9]{4,}$/.test(memberId.value)){
 		 alert("아이디는 영문자/숫자로 최소 4글자 이상이어야 합니다.");
 		 memberId.select();
+		 return false;
+	 }
+	 
+	 const idVaild = document.querySelector("#idValid");
+	 if(idValid.value !== 1){
+		 alert("아이디 중복검사 해주세요.");
+		 memberId.nextEelementSibling.focus();	//버튼태그
 		 return false;
 	 }
 	 

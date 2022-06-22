@@ -18,22 +18,22 @@ import com.kh.mvc.member.model.service.MemberService;
 /**
  * Servlet implementation class MemberEnrollServlet
  */
-@WebServlet("/member/memberEnroll")
+@WebServlet("/member/memberEnroll")	//같은 url을 사용
 public class MemberEnrollServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private MemberService memberService = new MemberService();
 
 	/**
-	 * 회원가입 폼 요청
+	 * GET : 회원가입 폼 요청
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.getRequestDispatcher("/WEB-INF/views/member/memberEnroll.jsp").forward(request, response);
 	}
 
 	/**
-	 * DB에 insert요청(DML)
+	 * POST : DB에 insert요청(DML)
 	 * 서블릿에서부터 어떤 쿼리를 날리지 생각해놓기!
-	 * insert into member values (?,?,?,default,?, ?, ?, ?, ?,default,default)
+	 * insert into member values (?, ?, ?, default,? , ?, ?, ?, ?, default, default)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
@@ -50,7 +50,7 @@ public class MemberEnrollServlet extends HttpServlet {
 			String phone = request.getParameter("phone");
 			String[] hobbies = request.getParameterValues("hobby");
 			
-			//후처리 필요한 값들
+			//후처리 필요한 값들(enum타입, 체크박스 처리, 모두 문자열로 날아오기때문에 변환), null처리 유의!! 
 			Gender gender = _gender != null ? Gender.valueOf(_gender) : null;
 			String hobby = hobbies != null ? String.join(",", hobbies) : null;
 			Date birthday = (_birthday != null && !"".equals(_birthday)) ? Date.valueOf(_birthday) : null;
@@ -58,11 +58,11 @@ public class MemberEnrollServlet extends HttpServlet {
 			
 			Member member = new Member(memberId, password, memberName, null, gender, birthday, email, phone, hobby, 0, null);
 			
-			System.out.println("member@MemberEnrollServlet = " + member);
+//			System.out.println("member@MemberEnrollServlet = " + member);
 			
 			//3. 업무로직 : DB insert, 1 이거나 오류
 			int result = memberService.insertMember(member);
-			System.out.println("resultMemberEnrollServlet = " + result);
+//			System.out.println("resultMemberEnrollServlet = " + result);
 			
 			
 			//4. 응답처리 : DML을 무조건 redirect처리
