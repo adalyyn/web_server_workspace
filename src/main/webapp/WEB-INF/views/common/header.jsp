@@ -1,4 +1,5 @@
 <%@ page import="com.kh.mvc.member.model.dto.Member"%>
+<%@ page import = "com.kh.mvc.member.model.dto.MemberRole" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
     
@@ -10,13 +11,14 @@
 	
 	//아이디 저장 : 로그아웃하고 리다이렉트했을때 쿠키값이 작동해줘야 한다.
 	String saveId = null;
-	Cookie[] cookies = request.getCookies();	//다 가져오기.
+	Cookie[] cookies = request.getCookies();	//요청에서 보낸 쿠키 다 가져오기.
 	if(cookies != null)
 		for(Cookie c : cookies){
-			String name = c.getName();
-			String value = c.getValue();
-			System.out.println("[Cookie]" + name + "=" + value);
-			if("saveId".equals(name)){
+			String name = c.getName();	//쿠키의 key
+			String value = c.getValue();	//쿠키의 value
+			System.out.println("[Cookie]" + name + "=" + value);	//name으로 saveId, JSESSIONID 
+			//관리하고 있는 쿠키중에 saveId
+			if("saveId".equals(name)){	
 				saveId = value;
 			}
 	}
@@ -111,7 +113,10 @@ window.onload = () => {
         <ul class="main-nav">
             <li class="home"><a href="<%= request.getContextPath() %>">Home</a></li>
             <li class="notice"><a href="#">공지사항</a></li>
-            <li class="board"><a href="#">게시판</a></li>
+            <li class="board"><a href="<%= request.getContextPath()%>/board/boardList">게시판</a></li>
+            <% if(loginMember != null && loginMember.getMemberRole() == MemberRole.A) { %>
+            <li class="admin"><a href="<%= request.getContextPath() %>/admin/memberList">회원관리</a></li>
+            <% } %>
         </ul>
     </nav>
     <!-- 메인메뉴 끝-->

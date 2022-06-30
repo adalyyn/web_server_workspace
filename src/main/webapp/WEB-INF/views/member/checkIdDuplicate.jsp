@@ -34,7 +34,7 @@ span#duplicated{color:red; font-weight:bold;}
 		</form>
 		<script>
 		document.checkIdDuplicateFrm.onsubmit = (e) => {
-			const frm = e.target;
+			const frm = e.target;	//현재 폼
 			if(!/^[a-zA-z0-9]{4,}$/.test(frm.memberId.value)){
 				alert("유효한 아이디를 입력하세요");
 				frm.memberId.select();
@@ -48,8 +48,8 @@ span#duplicated{color:red; font-weight:bold;}
 	const closePopup = () => {
 		// opener : 부모 윈도우 객체
 		const frm = opener.document.memberEnrollFrm;
-		frm.idValid.value = 1;
-		frm.memberId.value = "<%= request.getParameter("memberId") %>";
+		frm.idValid.value = 1;	
+		frm.memberId.value = "<%= request.getParameter("memberId") %>";	//팝업창에 남긴 아이디값이 팝업창 닫으면 회원가입 아이디에 반영되도록.
 		self.close();	//현재창 닫기
 	};
 	</script>

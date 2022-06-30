@@ -11,7 +11,7 @@
 					<input type="text" placeholder="4글자이상" name="memberId" id="_memberId" value="" required>
 					<input type="button" value="중복검사" onclick="checkIdDuplicate();"/>
 					<input type="hidden" id="idValid" value="0" />
-					<%-- 중복검사전 0, 중복검사후(유효한 아이디) 1, 보낼거 아니라서 name값 없다.  --%>
+					<%-- value는 중복검사전 0, 중복검사후(유효한 아이디) 1, 보낼거 아니라서 name값 없다.  --%>
 				</td>
 			</tr>
 			<tr>
@@ -86,6 +86,7 @@
  */
 const checkIdDuplicate = () => {
 	const memberId = document.querySelector("#_memberId");
+	//간단한 유효성검사
 	if(!/^[a-zA-Z0-9]{4,}$/.test(memberId.value)){
 		console.log(memberId.value);
 		alert("유효한 아이디를 입력해주세요");
@@ -94,9 +95,9 @@ const checkIdDuplicate = () => {
 	}
 	
 	// popup제어
-	const title = "checkIdDuplicatePopup";
-	const spec = "width=300px,height=300px";
-	const popup = open("", title, spec);
+	const title = "checkIdDuplicatePopup";	//팝업의 제목
+	const spec = "width=300px,height=300px";	
+	const popup = open("", title, spec);	//url은 생략
 	
 	// form제어
 	const frm = document.checkIdDuplicateFrm;

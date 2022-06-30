@@ -13,14 +13,14 @@ import javax.servlet.annotation.WebFilter;
  * Servlet Filter implementation class EncordingFilter
  */
 //@WebFilter("/*")
-public class EncordingFilter implements Filter {
+public class EncodingFilter implements Filter {
 
 	private String encodingType;
 	
     /**
      * Default constructor. 
      */
-    public EncordingFilter() {
+    public EncodingFilter() {
         // TODO Auto-generated constructor stub
     }
 
@@ -36,11 +36,11 @@ public class EncordingFilter implements Filter {
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		
-		request.setCharacterEncoding(encodingType);
-		
+//		request.setCharacterEncoding(encodingType);
+//		
 //		System.out.println("[encodingFilter : " + encodingType + "처리]");
-		
-		chain.doFilter(request, response);
+//		
+//		chain.doFilter(request, response);
 	}
 
 	/**

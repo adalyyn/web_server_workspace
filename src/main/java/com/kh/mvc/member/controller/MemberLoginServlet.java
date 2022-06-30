@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.kh.mvc.common.HelloMvcUtils;
 import com.kh.mvc.member.model.dto.Member;
 import com.kh.mvc.member.model.service.MemberService;
 
@@ -29,11 +30,12 @@ public class MemberLoginServlet extends HttpServlet {
 		
 		try {
 			//1. 인코딩처리
-			request.setCharacterEncoding("utf-8");
+//			request.setCharacterEncoding("utf-8");
 			
 			//2. 사용자 입력값 처리(자바변수에 담기)
 			String memberId = request.getParameter("memberId");
-			String password = request.getParameter("password");
+			//첫번째인자로 지금 사용자가 잆력한 값, 두번째인자로 솔트값인 memberId
+			String password = HelloMvcUtils.getEncryptedPassword(request.getParameter("password"), memberId);	//비문끼리 비교함.
 			String saveId = request.getParameter("saveID");
 			System.out.println("memberId = " + memberId);
 			System.out.println("password = " + password);
@@ -45,7 +47,7 @@ public class MemberLoginServlet extends HttpServlet {
 			System.out.println("member@MemberLoginServlet = " + member);
 			
 			HttpSession session = request.getSession(true);	//세션이 존재하지 않으면 새로 생성해서 반환. true는 생략가능.
-			System.out.println(session.getId());	//클라이언트와 동일한 아이디 확인가능.
+//			System.out.println(session.getId());	//클라이언트와 동일한 아이디 확인가능.
 			
 			//로그인 성공
 			if(member != null && password.equals(member.getPassword())) {
@@ -53,8 +55,8 @@ public class MemberLoginServlet extends HttpServlet {
 				session.setAttribute("loginMember", member);	//리다이렉트 요청에 대한 답변할때 이용
 				
 				//saveId처리(쿠키값이용)
-				Cookie cookie = new Cookie("saveId", memberId);	//키는 saveId, 밸류는 멤버아이디
-				cookie.setPath(request.getContextPath());	// /mvc라고 경로설정 -> /mvc로 시작하는 요청주소에 쿠키를 함께 전송.
+				Cookie cookie = new Cookie("saveId", memberId);	//키는 saveId, value는 로그인창에 보여줘야 하니까 memberId
+				cookie.setPath(request.getContextPath());	// "/mvc"라고 경로설정 -> /mvc로 시작하는 요청주소에 쿠키를 함께 전송.
 
 				
 				//saveId를 사용하는 경우 

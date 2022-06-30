@@ -23,21 +23,20 @@ public class SessionCounterListener implements HttpSessionListener {
     }
 
 	/**
-     * @see HttpSessionListener#sessionCreated(HttpSessionEvent)
      * 세션 생성되면 실행되는 이벤트리스너. 자동으로 톰캣에의해서 호출된다.
      */
     public void sessionCreated(HttpSessionEvent se)  { 
         activeSessions++; 
-    	System.out.println("[sessionCreated] 현재 세션 수 : " + activeSessions);
+//    	System.out.println("[sessionCreated] 현재 세션 수 : " + activeSessions);
     }
 
 	/**
-     * @see HttpSessionListener#sessionDestroyed(HttpSessionEvent)
+     * 세션이 폐기되면 실행되는 이벤트
      */
     public void sessionDestroyed(HttpSessionEvent se)  { 
-    	 if(activeSessions > 0)
+    	 if(activeSessions > 0)	//서버껐다 켜도 톰캣이 세션을 물고있는 경우 대비
     		 activeSessions--; 
-     	System.out.println("[sessionDestloyed] 현재 세션 수 : " + activeSessions);
+//     	System.out.println("[sessionDestloyed] 현재 세션 수 : " + activeSessions);
     }
 	
 }

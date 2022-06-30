@@ -43,21 +43,21 @@ public class LogFilter implements Filter {
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 	
-		//전처리
+		//doFilter를 기준으로 전처리
 		HttpServletRequest httpReq = (HttpServletRequest) request;
-		String uri = httpReq.getRequestURI();	// /mvc/member.enroll
+		String uri = httpReq.getRequestURI(); // /mvc/member/enroll
 		String method = httpReq.getMethod();
 		
-		System.out.println("===========================================");
+		System.out.println("================================================");
 		System.out.printf("%s %s%n", method, uri);
-		System.out.println("===========================================");
+		System.out.println("------------------------------------------------");
 		
-		//filter chain의 다음 filter를 호출하는 메소드. (마지막 필터라면 servlet을 호출)
-		chain.doFilter(request, response);		
+		// filter chain의 다음 filter를 호출(마지막 필터라면 servlet 호출)
+		chain.doFilter(request, response);
 		
-		//후처리
-		HttpServletResponse httpRes = (HttpServletResponse) response;
-		System.out.println("____________________________________________");
+		// 후처리
+		HttpServletResponse httpRes = (HttpServletResponse) response; 
+		System.out.println("________________________________________________");
 		System.out.println(httpRes.getStatus());
 		System.out.println();
 		
